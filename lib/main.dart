@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:ble_flt/sdk/mega_ble_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 
@@ -100,21 +101,8 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () async {
-                        try {
-                          await device.connect(
-                              autoConnect: false,
-                              timeout: Duration(seconds: 5));
-                          List<BluetoothService> services =
-                              await device.discoverServices();
-                          services.forEach((service) {
-                            print('${service.uuid}');
-                            service.characteristics.forEach((ch) {
-                              print('|---${ch.uuid}');
-                            });
-                          });
-                        } catch (e) {
-                          print(e);
-                        }
+                        var client = MegaBleClient(device);
+                        await client.connect();
                       },
                       child: Container(
                         decoration: BoxDecoration(
