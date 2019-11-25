@@ -1,12 +1,23 @@
-import 'dart:math';
-
-import 'package:ble_flt/sdk/mega_ble_client.dart';
+import 'package:ble_flt/pages/scan_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_blue/flutter_blue.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+import 'pvd.dart';
 
-FlutterBlue flutterBlue = FlutterBlue.instance;
+// void main() => runApp(ChangeNotifierProvider(
+//   child: MyApp(),
+//   builder: (context) => CounterProvider()),
+// );
+
+void main() => runApp(MultiProvider(
+  providers: [
+    // Provider<CounterProvider>.value(value: CounterProvider(),),
+    ChangeNotifierProvider(builder: (_) => CounterProvider())
+  ],
+  child: MyApp(),
+  // builder: (context) => CounterProvider()),
+));
+
 
 class MyApp extends StatelessWidget {
   @override
@@ -27,101 +38,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<ScanResult> scanList = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ble sdk Flt'),
+        title: Text('ble sdk flt'),
       ),
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: 40,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: <Widget>[
-                  RaisedButton(
-                    onPressed: () {
-                      print(123);
-                      flutterBlue.startScan();
-
-                      // Listen to scan results
-                      flutterBlue.scanResults.listen((List<ScanResult> _list) {
-                        // do something with scan result
-                        print('length: ${_list.length}');
-                        _list.asMap().forEach((i, res) {
-                          // if (res.device.name.isEmpty ||
-                          //     !res.device.name.toLowerCase().contains('ring'))
-                          //   return;
-                          print(
-                              "$i scaned -> ${res.device.name}, rssi: ${res.rssi}");
-                          setState(() {
-                            if (scanList.contains(res)) {
-                              // var i = scanList.indexOf(res);
-                              // scanList.removeAt(i);
-                              // scanList.insert(i, res);
-                              scanList.remove(res);
-                              // scanList.add(res);
-                            }
-                            scanList.add(res);
-                          });
-                        });
-                      });
-
-                      flutterBlue.isScanning.listen((isScanning) {
-                        print('Scanning Status: $isScanning');
-                      });
-                    },
-                    child: Text('scan'),
-                  ),
-                  SizedBox(width: 4),
-                  RaisedButton(
-                    onPressed: () {
-                      flutterBlue.stopScan();
-                    },
-                    child: Text('stop'),
-                  ),
-                ],
-              ),
-            ),
-
-            // list view
-            Container(
-              height: 400,
-              color: Colors.grey.shade100,
-              child: ListView.builder(
-                itemCount: scanList.length,
-                itemBuilder: (context, index) {
-                  final item = scanList[index];
-                  final device = item.device;
-                  return Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () async {
-                        var client = MegaBleClient(device);
-                        await client.connect();
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(
-                                    width: 1, color: Colors.grey.shade300))),
-                        height: 60,
-                        alignment: Alignment.center,
-                        child:
-                            Text('${device.name}  ${device.id}  ${item.rssi}'),
-                      ),
-                    ),
-                  );
-                  // return Text('${device.name} - ${device.id} - ${rssi}');
-                },
-              ),
-            ),
-          ],
-        ),
+      drawer: ScanDrawer(),
+      body: Consumer<CounterProvider>(
+        builder: (context, counterPvd, child) {
+          return Text('hello world. ${counterPvd.count}');
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Provider.of<CounterProvider>(context).increment();
+        },
       ),
     );
   }
