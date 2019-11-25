@@ -163,7 +163,6 @@ class _ScanDrawerState extends State<ScanDrawer> {
               child: Text(_isScanning ? '扫描中...' : '开始扫描'),
             ),
           ),
-          Listener()
         ],
       ),
     );
