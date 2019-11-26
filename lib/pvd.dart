@@ -1,3 +1,4 @@
+import 'package:ble_flt/sdk/ble_client.dart';
 import 'package:flutter/material.dart';
 
 class CounterProvider with ChangeNotifier {
@@ -10,11 +11,18 @@ class CounterProvider with ChangeNotifier {
   }
 }
 
-class BleProvider with ChangeNotifier {
-  bool isConnected;
+class BoolProvider with ChangeNotifier {
+  bool isConnected = false;
 
   void updateConnectionState(bool flag) {
     isConnected = flag;
+    notifyListeners();
   }
+}
 
+class BleProvider with ChangeNotifier {
+  MegaBleClient client;
+
+  BleProvider({this.client});
+  
 }
