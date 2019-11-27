@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'ble_service.dart';
 import 'constants.dart';
 
 class MegaBleResponseManager {
   BleService service;
-  Map<int, Function> cmdMap = {};
+  Map<int, BleExecution> cmdMap = {};
 
   MegaBleResponseManager({this.service}) {
 
@@ -13,9 +15,9 @@ class MegaBleResponseManager {
     int cmd = a[0], status = a[2];
     switch (cmd) {
       case CMD_FAKEBIND:
-        var fn = cmdMap[cmd];
-        if (fn != null) {
-          fn(a);
+        var exe = cmdMap[cmd];
+        if (exe != null && exe.isActive) {
+          exe.fn('ok', null);
         }
         break;
       default:
@@ -26,14 +28,11 @@ class MegaBleResponseManager {
 
   }
 
-  Future<Null> bindWithMasterToken(Function fn) async {
+  bindWithMasterToken(Function fn) async {
     var a = [1,2];
     var cmd = a[0];
     try {
-      var timeout = Future.delayed(Duration(seconds: 10));
-      cmdMap[cmd] = (res, err, timeout) {
-        
-      };
+      cmdMap[cmd] = BleExecution(fn);
       await service.chWrite.write(a);
     } catch (e) {
       cmdMap[cmd] = null;
@@ -46,3 +45,4 @@ class MegaBleResponseManager {
   }
 
 }
+
