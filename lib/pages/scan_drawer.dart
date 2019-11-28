@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 
-import '../sdk/mega_ble_client.dart';
 
 FlutterBlue flutterBlue = FlutterBlue.instance;
 

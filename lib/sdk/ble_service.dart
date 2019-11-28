@@ -1,5 +1,5 @@
 import 'package:flutter_blue/flutter_blue.dart';
-import 'constants.dart';
+import 'ble_constants.dart';
 
 class BleService {
   BluetoothService svRoot;
@@ -100,18 +100,5 @@ class BleService {
         break;
       default:
     }
-  }
-
-  initPipes() async {
-    await chIndi.setNotifyValue(true);
-    await chNoti.setNotifyValue(true);
-
-    chIndi.value.listen((value) {
-      print(value);
-    });
-
-    chNoti.value.listen((value) {
-      print(value);
-    });
   }
 }

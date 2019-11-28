@@ -83,3 +83,53 @@ const CTRL_AFE_SPO2 = 1;
 const CTRL_AFE_EHR = 2;
 const CTRL_NORMAL_ON = 1;
 const CTRL_NORMAL_OFF = 0;
+
+
+/// normal status const
+const int STATUS_OK                       = 0x00;
+const int STATUS_NO_DATA                  = 0x02; // 无数据可同步
+const int STATUS_SLEEPID_ERR              = 0x20;
+const int STATUS_CMD_PARAM_CANNOT_RESOLVE = 0x21;
+const int STATUS_MONITOR_IS_WORKING       = 0x22;
+const int STATUS_RECORDS_CTRL_ERR         = 0x23; // 监测没关，监测已开启，重复操作, 记录数据操作出错
+const int STATUS_AFE44XX_IS_MONITORING    = 0x24; // AFE44XX已经开启，无法再开启
+const int STATUS_AFE44XX_IS_SPORTING      = 0x25;
+const int STATUS_UNKNOWN_CMD              = 0x9F;
+const int STATUS_RTC_ERR                  = 0xA0;
+const int STATUS_LOWPOWER                 = 0xA1;
+const int STATUS_SPO2_HR_ERR              = 0xA2;
+const int STATUS_FLASH_ERR                = 0xA3;
+const int STATUS_REFUSED                  = 0xA4; // 可能在充电，充电时不可有开启命令类操作。但可同步数据
+const int STATUS_44XX_ERR                 = 0xA5;
+const int STATUS_GSENSOR_ERR              = 0xA6;
+const int STATUS_BQ25120_IS_FAULT         = 0xA7;
+const int STATUS_DEVICE_HW_ERR            = 0xB0;
+const int STATUS_RECORDS_TIME_SHORT       = 0xC0;
+const int STATUS_RECORDS_NO_STOP          = 0xC1;
+const int STATUS_DEVICE_UNKNOWN_ERR       = 0xFF;
+
+/// errors
+const int ERROR_BLE_NO_SUPPORT = -1;
+const int ERROR_ENABLE_UPDATE_PIPES = 0;
+const int ERROR_BIND = 40000;
+
+
+/// battery ageing status
+/// 老化结果
+const int STATUS_AGEING_PASS              = 0x03; // 3
+const int STATUS_AGEING_UNCHARGING        = 0x30; // 48
+const int STATUS_AGEING_NORECORDS         = 0x31; // 49
+const int STATUS_AGEING_OPERATION_FAULT   = 0x32; // 50
+const int STATUS_AGEING_TESTING           = 0x33; // 51
+const int STATUS_AGEING_TIME_ERROR        = 0x34; // 52
+
+/// client status
+const int STATUS_CLIENT_ANDROID           = 0x00;
+const int STATUS_CLIENT_IOS               = 0x20;
+const int STATUS_CLIENT_BALL              = 0x40;
+const int STATUS_CLIENT_XILINMEN          = 0x80;
+
+/// live valid flag
+const int STATUS_LIVE_VALID               = 0;    // 值有效，可显示
+const int STATUS_LIVE_PREPARING           = 1;    // 值准备中
+const int STATUS_LIVE_INVALID             = 2;    // 值无效
