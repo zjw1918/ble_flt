@@ -4,13 +4,18 @@ import 'package:ble_flt/sdk/ble_response.dart';
 import 'package:ble_flt/sdk/ble_service.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 
+typedef BleFunc = void Function(int, dynamic, [dynamic]); // (status, data, progress)
+
+class BleConfig {
+  static bool debuggable = false;
+}
+
 class MegaBleClient {
   final BluetoothDevice device;
   final MegaCallback callback;
   BleService _service;
   MegaCmdApiManager _apiManager;
   MegaBleResponseManager _responseManager;
-
 
   MegaBleClient({this.device, this.callback});
 
@@ -40,8 +45,12 @@ class MegaBleClient {
     await device.disconnect();
   }
 
-  Future<int> startWithMasterToken() {
-    return Future.value(1);
+  startWithMasterToken(BleFunc fn) {
+    _apiManager.bindWithMasterToken(fn);
+  }
+
+  enableDebug(bool flag) {
+    BleConfig.debuggable = flag;
   }
 
 }

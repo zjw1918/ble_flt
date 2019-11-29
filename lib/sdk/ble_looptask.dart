@@ -8,7 +8,7 @@ class LoopTaskManager {
   final Function onSendHeartBeat;
   final Function onReadRssi;
   
-  LoopTaskManager({this.onSendHeartBeat, this.onReadRssi}) {
+  LoopTaskManager(this.onSendHeartBeat, this.onReadRssi) {
     timers.addAll([
       Timer.periodic(Duration(seconds: PERIOD_HEART_BEAT), (t) => this.onSendHeartBeat()),
       Timer.periodic(Duration(seconds: PERIOD_READ_RSSI), (t) => this.onReadRssi()),

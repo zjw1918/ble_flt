@@ -108,10 +108,16 @@ const int STATUS_RECORDS_TIME_SHORT       = 0xC0;
 const int STATUS_RECORDS_NO_STOP          = 0xC1;
 const int STATUS_DEVICE_UNKNOWN_ERR       = 0xFF;
 
+const int STATUS_BOUND_TOKEN_COMING = 0;
+const int STATUS_BOUND_ALREADY_BOUND = 1;
+const int STATUS_BOUND_ALERT_KNOCK = 2;
+const int STATUS_BOUND_LOW_POWER = 3;
+const int STATUS_BOUND_USER_NOT_MATCH = 4;
+const int STATUS_BOUND_ERROR = 40000;
+
 /// errors
 const int ERROR_BLE_NO_SUPPORT = -1;
 const int ERROR_ENABLE_UPDATE_PIPES = 0;
-const int ERROR_BIND = 40000;
 
 
 /// battery ageing status
