@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ble_flt/sdk/ble_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 
@@ -98,7 +99,8 @@ class _ScanDrawerState extends State<ScanDrawer> {
         final item = scanList[index];
         return ListTile(
           onTap: () {
-            print(123123);
+            print('connect -> device: ${item.device.name}');
+            // MegaBleClient(device: item.device, )
           },
           title: Text(item.device.name),
           subtitle: Text(item.device.id.toString()),

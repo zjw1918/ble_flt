@@ -22,23 +22,34 @@ class MegaCmdApiManager {
     this.service.chWrite.write(a);
   }
 
-  void sendHeartBeat() {
+  void sendHeartBeat([BleFunc fn]) {
     var a = CmdMaker.makeHeartBeatCmd();
+    if (fn != null) this.cmdMap[a[1]] = fn;
     if (BleConfig.debuggable) print(hex.encode(a));
     this.service.chWrite.write(a);
   }
 
   void readRssi() {
-    
+
   }
 
-  void readDeviceInfo() {
-    this.service.chRead.read();
-  }
-
-  void setTime() {
+  void setTime([BleFunc fn]) {
     var a = CmdMaker.makeSetTimeCmd();
+    if (fn != null) this.cmdMap[a[1]] = fn;
     if (BleConfig.debuggable) print(hex.encode(a));
     this.service.chWrite.write(a);
   }
+
+  void setUserInfo(int age, int gender, int height, int weight, int stepLength, [BleFunc fn]) {
+    var a = CmdMaker.makeUserInfoCmd(age, gender, height, weight, stepLength);
+    if (fn != null) this.cmdMap[a[1]] = fn;
+    if (BleConfig.debuggable) print(hex.encode(a));
+    this.service.chWrite.write(a);
+  }
+
+  Future<List<int>> readDeviceInfo() {
+    return this.service.chRead.read();
+  }
+
+
 }

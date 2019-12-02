@@ -126,10 +126,10 @@ class MegaBleResponseManager {
     }
   }
 
-  void handleReadResponse(List<int> a) {
-    print('read: $a');
-    _nextStep();
-  }
+  // void handleReadResponse(List<int> a) {
+  //   print('read: $a');
+  //   _nextStep();
+  // }
 
   void handleDisConnect() {
     if (_loopTaskManager != null) {
@@ -138,7 +138,7 @@ class MegaBleResponseManager {
     }
   }
 
-  void _nextStep() {
+  void _nextStep() async {
     _stepCounter++;
 
     switch (_stepCounter) {
@@ -149,7 +149,9 @@ class MegaBleResponseManager {
         break;
 
       case STEP_READ_DEVICE_INFO:
-        apiManager.readDeviceInfo();
+        var readInfo = await apiManager.readDeviceInfo();
+        print(readInfo);
+        _nextStep();
         break;
 
       case STEP_SET_TIME:
