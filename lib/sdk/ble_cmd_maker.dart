@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:ble_flt/sdk/ble_constants.dart';
-import 'package:ble_flt/sdk/ble_util.dart';
+import 'ble_constants.dart';
+import 'ble_util.dart';
 
 const STATUS_CLIENT = STATUS_CLIENT_ANDROID;
 
@@ -9,9 +9,10 @@ class CmdMaker {
 
   static List<int> makeBindMasterCmd() {
     var s = BleUtil.genRandomString(12);
+    var md5 = BleUtil.generateMd5(s).bytes;
     return _initPack(CMD_FAKEBIND)
       ..setRange(3, 15, utf8.encode(s))
-      ..setRange(15, 20, BleUtil.generateMd5(s).bytes);
+      ..setRange(15, 20, md5.sublist(md5.length - 5));
   }
 
   static List<int> makeHeartBeatCmd() => _initPack(CMD_HEARTBEAT, arg: 1);

@@ -10,11 +10,14 @@ class MegaCallback {
     this.onSetUserInfo,
     this.onIdle,
 
-    // this.onTokenReceived,
-    // this.onKnockDevice,
-    // this.onOperationStatus,
-    // this.onEnsureBindWhenTokenNotMatch,
-    // this.onError,
+    this.onTokenReceived,
+    this.onKnockDevice,
+    this.onOperationStatus,
+    this.onEnsureBindWhenTokenNotMatch,
+    this.onError,
+    
+    this.onCrashLogReceived,
+    this.onV2ModeReceived,
   });
 
   final void Function(BluetoothDeviceState state) onConnectionStateChange;
@@ -24,10 +27,12 @@ class MegaCallback {
   final void Function() onSetUserInfo;
   final void Function() onIdle;
 
-  // final void Function(String token) onTokenReceived;
-  // final void Function() onKnockDevice;
-  // final void Function(int cmd, int status) onOperationStatus;
-  // final void Function() onEnsureBindWhenTokenNotMatch;
-  // final void Function(int errorCode) onError;
-  
+  final void Function(String token) onTokenReceived;
+  final void Function() onKnockDevice;
+  final void Function(int cmd, int status) onOperationStatus;
+  final void Function() onEnsureBindWhenTokenNotMatch;
+  final void Function(int errorCode) onError;
+
+  final void Function(List<int> a) onCrashLogReceived;
+  final void Function(MegaV2Mode mode) onV2ModeReceived;
 }

@@ -5,6 +5,8 @@ import 'ble_looptask.dart';
 import 'ble_callback.dart';
 import 'ble_constants.dart';
 
+import 'package:convert/convert.dart';
+
 const STEP_BIND_OK = 1;
 const STEP_READ_DEVICE_INFO = 2;
 const STEP_SET_TIME = 3;
@@ -22,44 +24,46 @@ class MegaBleResponseManager {
   MegaBleResponseManager(this.apiManager, this.callback);
 
   void handleIndicateResponse(List<int> a) {
+    if (a.isEmpty) return;
     int cmd = a[0], sn = a[1], status = a[2];
-    void Function(int, dynamic, [dynamic]) fn = apiManager.cmdMap[sn];
-    if (fn == null)
-      return print('No function found: cmd:$cmd, sn: $sn, status: $status');
+    print('[onIndicate<-] ${hex.encode(a)}');
     switch (cmd) {
       case CMD_FAKEBIND:
         if (status == 0) {
           switch (a[3]) {
             case 0: // receive token
-              fn(a[3], List.of([a[4], a[5], a[6], a[7], a[8], a[9]]).join(','));
+              callback.onTokenReceived(List.of([a[4], a[5], a[6], a[7], a[8], a[9]]).join(','));
               _nextStep();
               break;
             case 1: // already bound
-              fn(a[3], null);
               _nextStep();
               break;
             case 2: // please alert user to knock device
+              callback.onKnockDevice();
+            break;
             case 3: // low power
+              callback.onOperationStatus(cmd, STATUS_LOWPOWER);
+              break;
             case 4: // userInfo not match
-              fn(a[3], null);
+              callback.onEnsureBindWhenTokenNotMatch();
               break;
             default:
-              fn(STATUS_BOUND_ERROR, null);
+              callback.onError(STATUS_BOUND_ERROR);
               break;
           }
         }
         break;
 
       case CMD_SETTIME:
-        if (status == 0)
-          fn(status, (a[3] << 24) | (a[4] << 16) | (a[5] << 8) | a[6]);
-        _clearCmdMap(sn);
+        if (status == 0) {
+          int t = (a[3] << 24) | (a[4] << 16) | (a[5] << 8) | a[6];
+          var d = DateTime.fromMillisecondsSinceEpoch(t * 1000);
+          print('time set ok: $d');
+        }
         _nextStep();
         break;
 
       case CMD_SETUSERINFO:
-        if (status == 0) fn(status, true);
-        _clearCmdMap(sn);
         _nextStep();
         break;
 
@@ -70,13 +74,11 @@ class MegaBleResponseManager {
       case CMD_V2_MODE_SPORT:
       case CMD_V2_MODE_DAILY:
       case CMD_V2_MODE_LIVE_SPO:
-        fn(status, null);
-        _clearCmdMap(sn);
+        callback.onOperationStatus(cmd, status);
         break;
 
       case CMD_CRASHLOG:
-        fn(status, a);
-        _clearCmdMap(sn);
+        callback.onCrashLogReceived(a);
         break;
 
       case CMD_V2_GET_MODE:
@@ -84,26 +86,25 @@ class MegaBleResponseManager {
           int duration = (a[3] == 1 || a[3] == 2)
               ? ((a[4] << 24) | (a[5] << 16) | (a[6] << 8) | a[7])
               : 0;
-          fn(status, MegaV2Mode(a[3], duration));
-        } else {
-          fn(status, null);
+          callback.onV2ModeReceived(MegaV2Mode(a[3], duration));
         }
-        _clearCmdMap(sn);
         break;
 
       case CMD_SYNCDATA:
+        // todo
         break;
 
       case CTRL_MONITOR_DATA:
       case CTRL_DAILY_DATA:
+        // todo
         break;
 
       case CMD_NOTIBATT:
-        fn(status, [a[3], a[4], (a[5] << 16) | (a[6] << 8) | a[7]]);
+        callback.onBatteryChangedV2(a[3], a[4], (a[5] << 16) | (a[6] << 8) | a[7]);
         break;
 
       case CMD_HEARTBEAT:
-        fn(status, MegaBleHeartBeat(a[3], a[4], a[5], a[6], a[7], a[8]));
+        callback.onHeartBeatReceived(MegaBleHeartBeat(a[3], a[4], a[5], a[6], a[7], a[8]));
         break;
 
       default:
@@ -111,6 +112,8 @@ class MegaBleResponseManager {
   }
 
   void handleNotifyResponse(List<int> a) {
+    // print('handleNotifyResponse: ${hex.encode(a)}');
+    if (a.isEmpty) return;
     int cmd = a[0];
 
     switch (cmd) {
@@ -168,10 +171,6 @@ class MegaBleResponseManager {
 
       default:
     }
-  }
-
-  void _clearCmdMap(int sn) {
-    this.apiManager.cmdMap.remove(sn);
   }
 
   void _dispatchV2Live(List<int> a) {

@@ -6,8 +6,6 @@ import 'ble_service.dart';
 
 class MegaCmdApiManager {
   final BleService service;
-  Map<int, Function(int, dynamic, [dynamic])> cmdMap = {};
-
   MegaCmdApiManager({this.service});
 
   initPipes() async {
@@ -15,17 +13,15 @@ class MegaCmdApiManager {
     await this.service.chNoti.setNotifyValue(true);
   }
 
-  void bindWithMasterToken(BleFunc fn) {
+  void bindWithMasterToken() {
     var a = CmdMaker.makeBindMasterCmd();
-    this.cmdMap[a[1]] = fn;
-    if (BleConfig.debuggable) print(hex.encode(a));
+    if (BleConfig.debuggable) print('[cmd->] bindWithMasterToken: ' + hex.encode(a));
     this.service.chWrite.write(a);
   }
 
-  void sendHeartBeat([BleFunc fn]) {
+  void sendHeartBeat() {
     var a = CmdMaker.makeHeartBeatCmd();
-    if (fn != null) this.cmdMap[a[1]] = fn;
-    if (BleConfig.debuggable) print(hex.encode(a));
+    if (BleConfig.debuggable) print('[cmd->] sendHeartBeat: ' + hex.encode(a));
     this.service.chWrite.write(a);
   }
 
@@ -33,17 +29,15 @@ class MegaCmdApiManager {
 
   }
 
-  void setTime([BleFunc fn]) {
+  void setTime() {
     var a = CmdMaker.makeSetTimeCmd();
-    if (fn != null) this.cmdMap[a[1]] = fn;
-    if (BleConfig.debuggable) print(hex.encode(a));
+    if (BleConfig.debuggable) print('[cmd->] setTime: ' + hex.encode(a));
     this.service.chWrite.write(a);
   }
 
-  void setUserInfo(int age, int gender, int height, int weight, int stepLength, [BleFunc fn]) {
+  void setUserInfo(int age, int gender, int height, int weight, int stepLength) {
     var a = CmdMaker.makeUserInfoCmd(age, gender, height, weight, stepLength);
-    if (fn != null) this.cmdMap[a[1]] = fn;
-    if (BleConfig.debuggable) print(hex.encode(a));
+    if (BleConfig.debuggable) print('[cmd->] setUserInfo: ' + hex.encode(a));
     this.service.chWrite.write(a);
   }
 

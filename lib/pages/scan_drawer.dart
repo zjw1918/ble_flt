@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:ble_flt/sdk/ble_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:provider/provider.dart';
 
+import '../pvd.dart';
 
 FlutterBlue flutterBlue = FlutterBlue.instance;
 
@@ -28,17 +29,29 @@ class _ScanDrawerState extends State<ScanDrawer> {
   @override
   void dispose() {
     print("close");
+    if (_isScanning) {
+      _isScanning = false;
+      if (timer != null && timer.isActive) timer.cancel();
+      flutterBlue.stopScan();
+    }
+    super.dispose();
+  }
 
+  void _stopScan() {
+    if (!_isScanning) return;
     if (timer != null && timer.isActive) {
       timer.cancel();
     }
     flutterBlue.stopScan();
-    _isScanning = false;
-
-    super.dispose();
+    if (mounted) {
+      setState(() {
+        _isScanning = false;
+      });
+    }
   }
 
-  _scan() {
+  void _scan() {
+    if (_isScanning) return;
     setState(() {
       _isScanning = true;
       scanList.clear();
@@ -99,8 +112,12 @@ class _ScanDrawerState extends State<ScanDrawer> {
         final item = scanList[index];
         return ListTile(
           onTap: () {
-            print('connect -> device: ${item.device.name}');
-            // MegaBleClient(device: item.device, )
+            _stopScan();
+            print('connect -> device: ${item.device.id}');
+            Provider.of<BleProvider>(context)
+            ..initWithDevice(item.device)
+            ..connect();
+            Navigator.of(context).pop();
           },
           title: Text(item.device.name),
           subtitle: Text(item.device.id.toString()),

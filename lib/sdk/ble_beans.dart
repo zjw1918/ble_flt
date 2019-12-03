@@ -5,7 +5,7 @@ class MegaV2Mode {
 
   @override
   String toString() {
-    return 'MegaV2Mode: $this.mode, $this.duration';
+    return 'MegaV2Mode{ mode:${this.mode}, duration:${this.duration} }';
   }
 }
 
@@ -27,7 +27,7 @@ class MegaBleHeartBeat {
 
   @override
   String toString() {
-    return 'MegaBleHeartBeat: $this.version, $this.battPercent, $this.deviceStatus, $this.mode, $this.recordStatus, $this.periodMonitorStatus';
+    return 'MegaBleHeartBeat{ version:${this.version}, battPercent:${this.battPercent}, deviceStatus:${this.deviceStatus}, mode:${this.mode}, recordStatus:${this.recordStatus}, periodMonitorStatus:${this.periodMonitorStatus} }';
   }
 }
 
@@ -40,6 +40,6 @@ class MegaV2Live {
 
   @override
   String toString() {
-    return 'MegaV2Live: $this.spo, $this.pr, $this.status, $this.duration';
+    return 'MegaV2Live{ spo:${this.spo}, pr:${this.pr}, status:${this.status}, duration:${this.duration} }';
   }
 }

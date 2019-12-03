@@ -4,7 +4,7 @@ const int PERIOD_HEART_BEAT = 15; // 默认是15s发送一次
 const int PERIOD_READ_RSSI = 9;
 
 class LoopTaskManager {
-  List<Timer> timers;
+  List<Timer> timers = [];
   final Function onSendHeartBeat;
   final Function onReadRssi;
   

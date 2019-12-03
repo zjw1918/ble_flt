@@ -18,11 +18,11 @@ class BleService {
     services.forEach((service) {
       print('${service.uuid}');
       _initService(service);
-      _initServiceEEG(service);
+      // _initServiceEEG(service);
       service.characteristics.forEach((ch) {
         print('|---${ch.uuid}');
         _initCharacter(ch);
-        _initCharacterEEG(ch);
+        // _initCharacterEEG(ch);
       });
     });
   }
