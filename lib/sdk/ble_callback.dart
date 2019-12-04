@@ -18,10 +18,11 @@ class MegaCallback {
     
     this.onCrashLogReceived,
     this.onV2ModeReceived,
+    this.onDeviceInfoReceived,
   });
 
   final void Function(BluetoothDeviceState state) onConnectionStateChange;
-  final void Function(int value, int status, int duration) onBatteryChangedV2;
+  final void Function(MegaBattery batt) onBatteryChangedV2;
   final void Function(MegaBleHeartBeat) onHeartBeatReceived;
   final void Function(MegaV2Live live) onV2Live;
   final void Function() onSetUserInfo;
@@ -35,4 +36,5 @@ class MegaCallback {
 
   final void Function(List<int> a) onCrashLogReceived;
   final void Function(MegaV2Mode mode) onV2ModeReceived;
+  final void Function(MegaDeviceInfo mode) onDeviceInfoReceived;
 }

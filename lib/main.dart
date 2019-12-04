@@ -12,9 +12,9 @@ import 'pvd.dart';
 void main() => runApp(MultiProvider(
       providers: [
         // Provider<CounterProvider>.value(value: CounterProvider(),),
-        ChangeNotifierProvider(builder: (_) => CounterProvider()),
-        ChangeNotifierProvider(builder: (_) => BoolProvider()),
-        ChangeNotifierProvider(builder: (_) => BleProvider()),
+        ChangeNotifierProvider(create: (_) => CounterProvider()),
+        ChangeNotifierProvider(create: (_) => BoolProvider()),
+        ChangeNotifierProvider(create: (_) => BleProvider()),
       ],
       child: MyApp(),
       // builder: (context) => CounterProvider()),
@@ -56,23 +56,9 @@ class _HomePageState extends State<HomePage> {
             height: 40,
             child: _buildBtns(bleProvider),
           ),
-          Consumer<CounterProvider>(
-            builder: (context, counterPvd, child) {
-              return Text('hello world. ${counterPvd.count}');
-            },
-          ),
-          Consumer<BoolProvider>(
-            builder: (context, blePvd, child) {
-              return Text(blePvd.isConnected ? "on" : "off");
-            },
-          )
+          _buildContent(),
         ],
       ),
-      // Consumer<CounterProvider>(
-      //   builder: (context, counterPvd, child) {
-      //     return Text('hello world. ${counterPvd.count}');
-      //   },
-      // ),
     );
   }
 
@@ -92,7 +78,66 @@ class _HomePageState extends State<HomePage> {
             bleProvider.client.disconnect();
           },
         ),
+        RaisedButton(
+          child: Text('xxx'),
+          onPressed: () {
+            
+          },
+        ),
       ],
+    );
+  }
+
+  Widget _buildContent() {
+    return Consumer<BleProvider>(
+      builder: (BuildContext context, blePvd, Widget child) {
+        return DefaultTextStyle(
+          style: TextStyle(fontSize: 16, color: Colors.black54),
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Expanded(flex: 1, child: Text('Name:')),
+                  Expanded(flex: 4, child: Text(blePvd?.info?.name ?? '-')),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(flex: 1, child: Text('Mac:')),
+                  Expanded(flex: 4, child: Text(blePvd?.info?.mac ?? '-')),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(flex: 1, child: Text('SN:')),
+                  Expanded(flex: 4, child: Text(blePvd?.info?.sn ?? '-')),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(flex: 1, child: Text('Version:')),
+                  Expanded(flex: 4, child: Text(blePvd?.info?.fwVer ?? '-')),
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(flex: 1, child: Text('Other:')),
+                  Expanded(
+                      flex: 4, child: Text(blePvd?.info?.otherInfo ?? '-')),
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(flex: 1, child: Text('🔋:')),
+                  Expanded(flex: 4, child: Text('${blePvd?.info?.batt?.toString() ?? '-' }')),
+
+              ],)
+            ],
+          ),
+        );
+      },
     );
   }
 }

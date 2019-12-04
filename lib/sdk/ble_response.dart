@@ -1,3 +1,5 @@
+import 'package:ble_flt/sdk/ble_util.dart';
+
 import 'ble_beans.dart';
 import 'ble_sync_data.dart';
 import 'ble_cmd_api.dart';
@@ -32,7 +34,8 @@ class MegaBleResponseManager {
         if (status == 0) {
           switch (a[3]) {
             case 0: // receive token
-              callback.onTokenReceived(List.of([a[4], a[5], a[6], a[7], a[8], a[9]]).join(','));
+              callback.onTokenReceived(
+                  List.of([a[4], a[5], a[6], a[7], a[8], a[9]]).join(','));
               _nextStep();
               break;
             case 1: // already bound
@@ -40,7 +43,7 @@ class MegaBleResponseManager {
               break;
             case 2: // please alert user to knock device
               callback.onKnockDevice();
-            break;
+              break;
             case 3: // low power
               callback.onOperationStatus(cmd, STATUS_LOWPOWER);
               break;
@@ -100,11 +103,12 @@ class MegaBleResponseManager {
         break;
 
       case CMD_NOTIBATT:
-        callback.onBatteryChangedV2(a[3], a[4], (a[5] << 16) | (a[6] << 8) | a[7]);
+        callback.onBatteryChangedV2(MegaBattery(a[3], a[4], (a[5] << 16) | (a[6] << 8) | a[7]));
         break;
 
       case CMD_HEARTBEAT:
-        callback.onHeartBeatReceived(MegaBleHeartBeat(a[3], a[4], a[5], a[6], a[7], a[8]));
+        callback.onHeartBeatReceived(
+            MegaBleHeartBeat(a[3], a[4], a[5], a[6], a[7], a[8]));
         break;
 
       default:
@@ -121,8 +125,8 @@ class MegaBleResponseManager {
         _dispatchV2Live(a);
         break;
       case CMD_NOTIBATT:
-        callback.onBatteryChangedV2(a[3], a[4],
-            ((a[5] & 0xff) << 16) | ((a[6] & 0xff) << 8) | (a[7] & 0xff));
+        callback.onBatteryChangedV2(MegaBattery(a[3], a[4],
+            ((a[5] & 0xff) << 16) | ((a[6] & 0xff) << 8) | (a[7] & 0xff)));
         break;
 
       default:
@@ -153,7 +157,9 @@ class MegaBleResponseManager {
 
       case STEP_READ_DEVICE_INFO:
         var readInfo = await apiManager.readDeviceInfo();
-        print(readInfo);
+        var info = BleUtil.parseReadData(readInfo);
+        print(info);
+        callback.onDeviceInfoReceived(info);
         _nextStep();
         break;
 
@@ -178,27 +184,31 @@ class MegaBleResponseManager {
       switch (a[2]) {
         case 0:
           callback.onV2Live(MegaV2Live(
+              mode: a[2],
               spo: a[3],
               pr: a[4],
               status: a[5])); // spo, hr, flag | a[3]  a[4] a[5]
           break;
-        case 0x01:
+        case 1:
           callback.onV2Live(MegaV2Live(
+              mode: a[2],
               status: a[3],
               spo: a[4],
               pr: a[5],
               duration: (a[6] << 24) | (a[7] << 16) | (a[8] << 8) | a[9]));
           break;
-        case 0x02:
+        case 2:
           callback.onV2Live(MegaV2Live(
+              mode: a[2],
               status: a[3],
               pr: a[4],
               duration: (a[5] << 24) | (a[6] << 16) | (a[7] << 8) | a[8]));
           break;
-        case 0x03:
+        case 3:
           break;
-        case 0x04:
-          callback.onV2Live(MegaV2Live(status: a[3], spo: a[4], pr: a[5]));
+        case 4:
+          callback.onV2Live(
+              MegaV2Live(mode: a[2], status: a[3], spo: a[4], pr: a[5]));
           break;
 
         default:

@@ -1,3 +1,5 @@
+import 'ble_constants.dart';
+
 class MegaV2Mode {
   const MegaV2Mode(this.mode, this.duration);
   final int mode;
@@ -5,7 +7,7 @@ class MegaV2Mode {
 
   @override
   String toString() {
-    return 'MegaV2Mode{ mode:${this.mode}, duration:${this.duration} }';
+    return 'MegaV2Mode{ mode:$mode, duration:$duration }';
   }
 }
 
@@ -27,19 +29,68 @@ class MegaBleHeartBeat {
 
   @override
   String toString() {
-    return 'MegaBleHeartBeat{ version:${this.version}, battPercent:${this.battPercent}, deviceStatus:${this.deviceStatus}, mode:${this.mode}, recordStatus:${this.recordStatus}, periodMonitorStatus:${this.periodMonitorStatus} }';
+    return 'MegaBleHeartBeat{ version:$version, battPercent:$battPercent, deviceStatus:$deviceStatus, mode:$mode, recordStatus:$recordStatus, periodMonitorStatus:$periodMonitorStatus }';
   }
 }
 
 class MegaV2Live {
-  const MegaV2Live({this.spo, this.pr, this.status, this.duration});
+  const MegaV2Live({this.spo, this.pr, this.status, this.duration, this.mode});
   final int spo;
   final int pr;
+  final int status;
+  final int duration;
+  final int mode;
+
+  @override
+  String toString() {
+    return 'MegaV2Live{ spo:$spo, pr:$pr, status:$status, duration:$duration, mode:$mode }';
+  }
+}
+
+class MegaDeviceInfo {
+  MegaDeviceInfo({
+    this.name,
+    this.mac,
+    this.otherInfo,
+    this.hwVer,
+    this.fwVer,
+    this.blVer,
+    this.sn,
+    this.isRunning,
+    this.rawSn,
+    this.rawHwSwBl,
+    this.batt,
+  });
+  String name;
+  String mac;
+  String otherInfo;
+
+  String hwVer;
+  String fwVer;
+  String blVer;
+  String sn;
+  bool isRunning;
+
+  List<int> rawSn; // 附件原始sn字节
+  List<int> rawHwSwBl; // 固件原始信息字节
+
+  MegaBattery batt;
+
+  @override
+  String toString() {
+    return 'MegaDeviceInfo{ name: $name, mac: $mac, otherInfo: $otherInfo, hwVer: $hwVer, fwVer: $fwVer, blVer: $blVer, sn: $sn, isRunning: $isRunning, rawSn: $rawSn, rawHwSwBl: $rawHwSwBl, batt:$batt }';
+  }
+}
+
+class MegaBattery {
+  MegaBattery(this.value, this.status, this.duration);
+  final int value;
   final int status;
   final int duration;
 
   @override
   String toString() {
-    return 'MegaV2Live{ spo:${this.spo}, pr:${this.pr}, status:${this.status}, duration:${this.duration} }';
+    var _status = CONST_BATTERY_DESC[status];
+    return 'value:$value, status:$_status, duration:$duration';
   }
 }

@@ -139,3 +139,17 @@ const int STATUS_CLIENT_XILINMEN          = 0x80;
 const int STATUS_LIVE_VALID               = 0;    // 值有效，可显示
 const int STATUS_LIVE_PREPARING           = 1;    // 值准备中
 const int STATUS_LIVE_INVALID             = 2;    // 值无效
+
+    /// v2 current mode
+const int MODE_SPO = 1;
+const int MODE_SPORT = 2;
+const int MODE_DAILY = 3;
+const int MODE_SPO_LIVE = 4;
+const int MODE_BP = 5;
+
+const Map<int, String> CONST_BATTERY_DESC = {
+  0: 'normal',
+  1: 'charging',
+  2: 'full',
+  3: 'lowPower',
+};

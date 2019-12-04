@@ -26,25 +26,32 @@ class BoolProvider with ChangeNotifier {
 
 class BleProvider with ChangeNotifier {
   MegaBleClient client;
-  // BluetoothDevice _device;
+  BluetoothDevice _device;
   BuildContext _context;
+  MegaDeviceInfo info;
+  
 
   withContext(BuildContext context) {
     this._context = context;
   }
 
   void initWithDevice(BluetoothDevice device) {
-    // this._device = device;
+    this._device = device;
     client = MegaBleClient(
         device: device,
         callback:
             MegaCallback(onConnectionStateChange: (BluetoothDeviceState state) {
-          print('onConnectionStateChange: $state');
-          // if (state == BluetoothDeviceState.disconnected) client = null;
+          print('---☔️onConnectionStateChange---: $state');
+          if (state == BluetoothDeviceState.disconnected) {
+            info = null;
+            notifyListeners();
+          }
+
         }, onSetUserInfo: () {
           client.setUserInfo(25, 1, 170, 60, 0);
         }, onIdle: () {
           print('idle');
+          notifyListeners();
         }, onHeartBeatReceived: (heartBeat) {
           print(heartBeat);
         }, onV2Live: (MegaV2Live live) {
@@ -57,8 +64,13 @@ class BleProvider with ChangeNotifier {
           _dismissDialog();
         }, onOperationStatus: (cmd, status) {
           print('cmd: ${cmd.toRadixString(16)}, status: $status');
-        }, onBatteryChangedV2: (int value, int status, int duration) {
-          print('value: $value, status: $status, duration: $duration');
+        }, onBatteryChangedV2: (batt) {
+          info.batt = batt;
+          notifyListeners();
+        }, onDeviceInfoReceived: (_info) {
+          this.info = _info;
+          this.info.name = _device.name;
+          this.info.mac = _device.id.toString();
         }));
 
     client.enableDebug(true);
@@ -71,6 +83,10 @@ class BleProvider with ChangeNotifier {
     } catch (e) {
       print(e);
     }
+  }
+
+  void disconnect() {
+
   }
 
   void _showKnowDialog(String title, String content, String btnText) {

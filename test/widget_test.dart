@@ -8,6 +8,7 @@
 import 'dart:convert';
 
 import 'package:ble_flt/sdk/ble_cmd_maker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:convert/convert.dart';
 
@@ -43,5 +44,6 @@ void main() {
     print(hex.encode([0, 0, 0, 93, 223, 160, 175, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]));
 
     print(hex.encode(CmdMaker.makeV2EnableModeSpoMonitor(true, DateTime.now().millisecondsSinceEpoch ~/ 1000)));
+
   });
 }
