@@ -28,8 +28,9 @@ class BleProvider with ChangeNotifier {
   MegaBleClient client;
   BluetoothDevice _device;
   BuildContext _context;
+  // notify properties
   MegaDeviceInfo info;
-  
+  MegaV2Live live;
 
   withContext(BuildContext context) {
     this._context = context;
@@ -54,8 +55,10 @@ class BleProvider with ChangeNotifier {
           notifyListeners();
         }, onHeartBeatReceived: (heartBeat) {
           print(heartBeat);
-        }, onV2Live: (MegaV2Live live) {
-          print(live);
+        }, onV2Live: (MegaV2Live _live) {
+          // print(live);
+          live = _live;
+          notifyListeners();
         }, onKnockDevice: () {
           print('onKnockDevice');
           _showKnowDialog('Ring Pairing', 'Please shake the ring', 'I know');

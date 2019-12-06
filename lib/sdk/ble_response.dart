@@ -18,6 +18,7 @@ const STEP_IDLE = 5;
 class MegaBleResponseManager {
   final MegaCmdApiManager apiManager;
   final MegaCallback callback;
+  MegaDeviceInfo _info;
   LoopTaskManager _loopTaskManager;
   MegaBleSyncDataManager _syncDataManager;
 
@@ -94,12 +95,49 @@ class MegaBleResponseManager {
         break;
 
       case CMD_SYNCDATA:
-        // todo
+        callback.onOperationStatus(cmd, status);
+        if (status == 0) {
+          print('Trans permission [yes]...');
+          _syncDataManager = MegaBleSyncDataManager(SyncDataCallback(
+            onWriteReportPack: (List<int> pack) {
+              apiManager.writePack(pack);
+            },
+            onProgress: (progress) {
+              callback.onSyncingDataProgress(progress);
+            },
+            onDailyDataComplete: (List<int> bytes) {
+              callback.onSyncDailyDataComplete(bytes);
+            },
+            onMonitorDataComplete: (List<int> bytes, int dataStopType, int dataType, String uid) {
+              callback.onSyncMonitorDataComplete(bytes, dataStopType, dataType, uid);
+            },
+            onSyncDailyData: () {
+              apiManager.syncDailyData();
+            },
+            onSyncMonitorData: () {
+              apiManager.syncMonitorData();
+            }
+          ));
+          _syncDataManager.info = _info;
+          _syncDataManager.handleTransmitPermitted(a);
+        } else {
+          _syncDataManager = null;
+          if (status == 2) {
+            print('Trans permission [no], no data.');
+            if (a[5] == 0 || a[5] == CTRL_DAILY_DATA) {
+              print('No daily data.');
+              callback.onSyncNoDataOfDaily();
+            } else if (a[5] == CTRL_MONITOR_DATA) {
+              print('No monitor data.');
+              callback.onSyncNoDataOfMonitor();
+            }
+          }
+        }
         break;
 
       case CTRL_MONITOR_DATA:
       case CTRL_DAILY_DATA:
-        // todo
+        _syncDataManager?.handleCtrlIndicate(a);
         break;
 
       case CMD_NOTIBATT:
@@ -130,6 +168,7 @@ class MegaBleResponseManager {
         break;
 
       default:
+        _syncDataManager?.handleNotify(a);
     }
   }
 
@@ -157,9 +196,9 @@ class MegaBleResponseManager {
 
       case STEP_READ_DEVICE_INFO:
         var readInfo = await apiManager.readDeviceInfo();
-        var info = BleUtil.parseReadData(readInfo);
-        print(info);
-        callback.onDeviceInfoReceived(info);
+        this._info = UtilBle.parseReadData(readInfo);
+        print(this._info);
+        callback.onDeviceInfoReceived(this._info);
         _nextStep();
         break;
 

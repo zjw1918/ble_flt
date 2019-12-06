@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'dart:math';
-
-import 'package:ble_flt/sdk/ble_beans.dart';
 import 'package:crypto/crypto.dart';
-import 'package:flutter/foundation.dart';
+
+import 'ble_beans.dart';
+import 'ble_constants.dart';
 
 const String CONST_62_STRING =
     'zxcvbnmlkjhgfdsaqwertyuiopQWERTYUIOPASDFGHJKLZXCVBNM1234567890';
 
-class BleUtil {
+class UtilBle {
   static Digest generateMd5(String input) {
     return md5.convert(utf8.encode(input));
   }
@@ -17,42 +17,57 @@ class BleUtil {
       .map((_) => CONST_62_STRING[Random().nextInt(CONST_62_STRING.length)])
       .join();
 
-    static MegaDeviceInfo parseReadData(List<int> a) {
-        int hw1 = (a[0] & 0xf0) >> 4;
-        int hw2 = (a[0] & 0x0f);
-        int fw1 = (a[1] & 0xf0) >> 4;
-        int fw2 = (a[1] & 0x0f);
-        int fw3 = (a[2] << 8) | a[3];
-        int bl1 = (a[4] & 0xf0) >> 4;
-        int bl2 = (a[4] & 0x0f);
+  static MegaDeviceInfo parseReadData(List<int> a) {
+    int hw1 = (a[0] & 0xf0) >> 4;
+    int hw2 = (a[0] & 0x0f);
+    int fw1 = (a[1] & 0xf0) >> 4;
+    int fw2 = (a[1] & 0x0f);
+    int fw3 = (a[2] << 8) | a[3];
+    int bl1 = (a[4] & 0xf0) >> 4;
+    int bl2 = (a[4] & 0x0f);
 
-        String sn = "0000";
-        if (a[5] != 0) sn = parseSnEnter([a[5], a[6], a[7], a[8], a[9], a[10]]);
+    String sn = "0000";
+    if (a[5] != 0) sn = parseSnEnter([a[5], a[6], a[7], a[8], a[9], a[10]]);
 
-        List<int> gSENSOR4404Flag = _byteToBits(a[11]); // xyz
-        int x = gSENSOR4404Flag[0];
-        int y = gSENSOR4404Flag[1];
-        int z = gSENSOR4404Flag[2];
-        int t = gSENSOR4404Flag[3];
-        String deviceCheck = "I2C[" + (x != 0 ? "y" : "n") + "] "
-                + "GS[" + (y != 0 ? "y" : "n") + "] "
-                + "4404[" + (z != 0 ? "y" : "n") + "] "
-                + "BQ[" + (t != 0 ? "y" : "n") + "] ";
-        String runFlag = a[12] == 0 ? "off" : (a[12] == 1 ? "on" : "pause");
-        bool isRunning = a[12] != 0;
+    List<int> gSENSOR4404Flag = _byteToBits(a[11]); // xyz
+    int x = gSENSOR4404Flag[0];
+    int y = gSENSOR4404Flag[1];
+    int z = gSENSOR4404Flag[2];
+    int t = gSENSOR4404Flag[3];
+    String deviceCheck = "I2C[" +
+        (x != 0 ? "y" : "n") +
+        "] " +
+        "GS[" +
+        (y != 0 ? "y" : "n") +
+        "] " +
+        "4404[" +
+        (z != 0 ? "y" : "n") +
+        "] " +
+        "BQ[" +
+        (t != 0 ? "y" : "n") +
+        "] ";
+    String runFlag = a[12] == 0 ? "off" : (a[12] == 1 ? "on" : "pause");
+    bool isRunning = a[12] != 0;
 
-        String hwVer = '$hw1.$hw2';
-        String fwVer = '$fw1.$fw2.$fw3';
-        String blVer = '$bl1.$bl2';
-        String otherInfo = 'HW: v$hwVer BL: v$blVer hwCheck: $deviceCheck run: $runFlag';
+    String hwVer = '$hw1.$hw2';
+    String fwVer = '$fw1.$fw2.$fw3';
+    String blVer = '$bl1.$bl2';
+    String otherInfo =
+        'HW: v$hwVer BL: v$blVer hwCheck: $deviceCheck run: $runFlag';
 
-        var rawSn = [a[5], a[6], a[7], a[8], a[9], a[10]];
-        var rawHwSwBl = [a[0], a[1], a[2], a[3], a[4]];
+    var rawSn = [a[5], a[6], a[7], a[8], a[9], a[10]];
+    var rawHwSwBl = [a[0], a[1], a[2], a[3], a[4]];
 
-        return MegaDeviceInfo(hwVer: hwVer, fwVer: fwVer, blVer: blVer, 
-          otherInfo: otherInfo, isRunning: isRunning, sn: sn,
-          rawSn: rawSn, rawHwSwBl: rawHwSwBl);
-    }
+    return MegaDeviceInfo(
+        hwVer: hwVer,
+        fwVer: fwVer,
+        blVer: blVer,
+        otherInfo: otherInfo,
+        isRunning: isRunning,
+        sn: sn,
+        rawSn: rawSn,
+        rawHwSwBl: rawHwSwBl);
+  }
 
   /// parse sn by protocol
   static String parseSnEnter(List<int> a) {
@@ -103,28 +118,43 @@ class BleUtil {
   }
 
   static List<int> _byteToBits(int b) {
-      var bits = List.filled(8, 0);
-      for (int i = 7; i >= 0; i--) {
-          bits[i] = ((b & (1 << i)) == 0 ? 0 : 1);
-      }
-      return bits;
+    var bits = List.filled(8, 0);
+    for (int i = 7; i >= 0; i--) {
+      bits[i] = ((b & (1 << i)) == 0 ? 0 : 1);
+    }
+    return bits;
   }
+
+  /// a map of list to long list
+  static List<int> flatConcatMap(Map<int, List<int>> map) {
+    if (map == null || map.length == 0) return [];
+    List<int> a = [];
+    for (var i = 0; i < map.length; i++) {
+      // by order
+      a += map[i];
+    }
+    return a;
+  }
+
+  static int crcXmodem(List<int> bytes) {
+    int crc = 0x00;
+    int polynomial = 0x1021;
+    for (var b in bytes) {
+      for (int i = 0; i < 8; i++) {
+        bool bit = ((b >> (7 - i) & 1) == 1);
+        bool c15 = ((crc >> 15 & 1) == 1);
+        crc <<= 1;
+        if (c15 ^ bit) crc ^= polynomial;
+      }
+    }
+    crc &= 0xffff;
+    return crc;
+  }
+
+  static List<int> intToBytes(int a) => [
+        ((a & 0xff000000) >> 24),
+        ((a & 0x00ff0000) >> 16),
+        ((a & 0x0000ff00) >> 8),
+        (a & 0x000000ff)
+      ];
 }
-
-/// parse sn utils
-const Map<int, String> RING_SN_TYPE = {
-  0: "P11A",
-  1: "P11B",
-  2: "P11C",
-  3: "P11D",
-  7: "P11T",
-  4: "E11D",
-};
-
-const Map<int, List<String>> RING_TYPE_MAP = {
-  5: ["C11E", "P11E"],
-};
-
-const Map<int, List<int>> RING_SIZE_MAP = {
-  5: [2, 3],
-};

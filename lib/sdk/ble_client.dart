@@ -6,9 +6,7 @@ import 'package:ble_flt/sdk/ble_response.dart';
 import 'package:ble_flt/sdk/ble_service.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 
-class BleConfig {
-  static bool debuggable = false;
-}
+import 'ble_beans.dart';
 
 class MegaBleClient {
   final BluetoothDevice device;
@@ -51,9 +49,7 @@ class MegaBleClient {
   }
 
   disconnect() async {
-    listeners.forEach((sub) {
-      sub.cancel();
-    });
+    listeners.forEach((sub) => sub.cancel());
     _responseManager.handleDisConnect();
     await device.disconnect();
   }
@@ -69,4 +65,25 @@ class MegaBleClient {
   setUserInfo(int age, int gender, int height, int weight, int stepLength) {
     _apiManager.setUserInfo(age, gender, height, weight, stepLength);
   }
+
+  void toggleLive(bool enable) {
+    _apiManager.toggleLive(enable);
+  }
+
+  /// enable spo2
+  void enableV2ModeSpo() {
+    _apiManager.enableV2ModeSpo(true, 0);
+  }
+  /// enable sport
+  void enableV2ModeSport() {
+    _apiManager.enableV2ModeSport(true, 0);
+  }
+  /// enable daily / stop monitor
+  void enableV2ModeDaily() {
+    _apiManager.enableV2ModeDaily(true, 0);
+  }
+
+  void syncData() => _apiManager.syncMonitorData();
+  void syncDailyData() => _apiManager.syncDailyData();
+
 }

@@ -1,5 +1,9 @@
 import 'ble_constants.dart';
 
+class BleConfig {
+  static bool debuggable = false;
+}
+
 class MegaV2Mode {
   const MegaV2Mode(this.mode, this.duration);
   final int mode;
@@ -43,7 +47,9 @@ class MegaV2Live {
 
   @override
   String toString() {
-    return 'MegaV2Live{ spo:$spo, pr:$pr, status:$status, duration:$duration, mode:$mode }';
+    var _status = CONST_LIVE_DESC[status];
+    var _mode = CONST_MODE_DESC[mode];
+    return 'Live{ spo:${spo ?? '-'}, pr:$pr, $_status, duration:$duration, mode:$_mode }';
   }
 }
 

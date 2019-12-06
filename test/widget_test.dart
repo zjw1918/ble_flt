@@ -36,14 +36,25 @@ void main() {
   // });
 
   test("md5", () {
-    var r = BleUtil.genRandomString(12);
-    print(r);
-    print(utf8.encode(r));
-    print(utf8.decode(utf8.encode(r)));
-    // print(generateMd5Bytes('hello'));
-    print(hex.encode([0, 0, 0, 93, 223, 160, 175, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]));
+    // var r = UtilBle.genRandomString(12);
+    // print(r);
+    // print(utf8.encode(r));
+    // print(utf8.decode(utf8.encode(r)));
+    // // print(generateMd5Bytes('hello'));
+    // print(hex.encode([0, 0, 0, 93, 223, 160, 175, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]));
 
-    print(hex.encode(CmdMaker.makeV2EnableModeSpoMonitor(true, DateTime.now().millisecondsSinceEpoch ~/ 1000)));
+    // print(hex.encode(CmdMaker.makeV2EnableModeSpo(true, DateTime.now().millisecondsSinceEpoch ~/ 1000)));
 
+    // List<int> a = List.filled(10, 0);
+    // print(a + [99]);
+
+    var d = DateTime.now();
+    var yy = d.year.toString().padLeft(2, '0');
+    var mm = d.month.toString().padLeft(2, '0');
+    var dd = d.day.toString().padLeft(2, '0');
+    var hh = d.hour.toString().padLeft(2, '0');
+    var mmm = d.minute.toString().padLeft(2, '0');
+    var ss = d.second.toString().padLeft(2, '0');
+    print('${yy}_${mm}_${dd}_${hh}_${mmm}_$ss');
   });
 }

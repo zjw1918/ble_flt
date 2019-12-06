@@ -9,16 +9,19 @@ class MegaCallback {
     this.onV2Live,
     this.onSetUserInfo,
     this.onIdle,
-
     this.onTokenReceived,
     this.onKnockDevice,
     this.onOperationStatus,
     this.onEnsureBindWhenTokenNotMatch,
     this.onError,
-    
     this.onCrashLogReceived,
     this.onV2ModeReceived,
     this.onDeviceInfoReceived,
+    this.onSyncingDataProgress,
+    this.onSyncMonitorDataComplete,
+    this.onSyncDailyDataComplete,
+    this.onSyncNoDataOfDaily,
+    this.onSyncNoDataOfMonitor,
   });
 
   final void Function(BluetoothDeviceState state) onConnectionStateChange;
@@ -37,4 +40,12 @@ class MegaCallback {
   final void Function(List<int> a) onCrashLogReceived;
   final void Function(MegaV2Mode mode) onV2ModeReceived;
   final void Function(MegaDeviceInfo mode) onDeviceInfoReceived;
+
+  final void Function(int progress) onSyncingDataProgress;
+  final void Function(
+          List<int> bytes, int dataStopType, int dataType, String uid)
+      onSyncMonitorDataComplete;
+  final void Function(List<int> bytes) onSyncDailyDataComplete;
+  final void Function() onSyncNoDataOfMonitor;
+  final void Function() onSyncNoDataOfDaily;
 }

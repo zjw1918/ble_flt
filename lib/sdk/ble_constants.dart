@@ -147,9 +147,42 @@ const int MODE_DAILY = 3;
 const int MODE_SPO_LIVE = 4;
 const int MODE_BP = 5;
 
+/// const map
 const Map<int, String> CONST_BATTERY_DESC = {
   0: 'normal',
   1: 'charging',
   2: 'full',
   3: 'lowPower',
+};
+
+const Map<int, String> CONST_LIVE_DESC = {
+  0: '有效',
+  1: '准备中',
+  2: '无效',
+};
+
+const Map<int, String> CONST_MODE_DESC = {
+  1: '血氧',
+  2: '运动',
+  3: '日常',
+  4: '血氧实时',
+  5: 'BP',
+};
+
+/// parse sn utils
+const Map<int, String> RING_SN_TYPE = {
+  0: "P11A",
+  1: "P11B",
+  2: "P11C",
+  3: "P11D",
+  7: "P11T",
+  4: "E11D",
+};
+
+const Map<int, List<String>> RING_TYPE_MAP = {
+  5: ["C11E", "P11E"],
+};
+
+const Map<int, List<int>> RING_SIZE_MAP = {
+  5: [2, 3],
 };
