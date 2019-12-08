@@ -85,5 +85,7 @@ class MegaBleClient {
 
   void syncData() => _apiManager.syncMonitorData();
   void syncDailyData() => _apiManager.syncDailyData();
+  void reset() => _apiManager.reset();
+  void shutdown() => _apiManager.shutdown();
 
 }

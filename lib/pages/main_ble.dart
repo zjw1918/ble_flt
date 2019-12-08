@@ -1,8 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:ble_flt/permissions/util_permission.dart';
-import 'package:ble_flt/sdk/ble_util.dart';
 import 'package:ble_flt/sdk/ble_util_file.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import '../pvd.dart';
 import 'scan_drawer.dart';
-import '../sdk/ble_constants.dart';
 
 class BleMainPage extends StatefulWidget {
   @override
@@ -49,21 +44,16 @@ class _BleMainPageState extends State<BleMainPage> {
   }
 
   Widget _buildCmdMenu(BleProvider bleProvider) {
-    var list = [
-      '收数据'
+    List<CmdHandler> list = [
+      CmdHandler('收数据', () => bleProvider.client.syncData()),
+      CmdHandler('reset', () => bleProvider.client.reset()),
+      CmdHandler('shutdown', () => bleProvider.client.shutdown()),
     ];
-    return PopupMenuButton<String>(
-      onSelected: (String result) { 
-        switch (result) {
-          case '收数据':
-            bleProvider.client.syncData();
-            break;
-          default:
-        }
-       },
-      itemBuilder: (BuildContext context) => list.map((i) => PopupMenuItem<String>(
+    return PopupMenuButton<CmdHandler>(
+      onSelected: (CmdHandler result) => result.fn(),
+      itemBuilder: (BuildContext context) => list.map((i) => PopupMenuItem<CmdHandler>(
         value: i,
-        child: Text(i),
+        child: Text(i.name),
       )).toList()
     );
   }
@@ -225,4 +215,10 @@ class _BleMainPageState extends State<BleMainPage> {
       },
     );
   }
+}
+
+class CmdHandler {
+  const CmdHandler(this.name, this.fn);
+  final String name;
+  final Function fn;
 }

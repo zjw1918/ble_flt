@@ -1,4 +1,5 @@
 import 'package:ble_flt/pages/main_ble.dart';
+import 'package:ble_flt/permissions/util_permission.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +24,11 @@ void main() => runApp(MultiProvider(
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print('build....');
+    UtilPermission.requestPermiss(() {
+      print('permission ok.');
+    });
+    
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(

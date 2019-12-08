@@ -81,6 +81,11 @@ class CmdMaker {
   static List<int> makeSyncDailyDataCmd() =>
       _initPack(CMD_SYNCDATA, arg: CTRL_DAILY_DATA);
 
+  static List<int> makeResetCmd() => _initPack(CMD_RESET);
+  static List<int> makeShutdownCmd() => _initPack(CMD_SHUTDOWN);
+  static List<int> makeFindMeCmd() => _initPack(CMD_FINDME);
+  static List<int> makeCrashLogCmd() => _initPack(CMD_CRASHLOG);
+
   /// help fn
   static List<int> _initPack(int cmd, {int arg = 0}) => List.filled(20, 0)
     ..[0] = cmd

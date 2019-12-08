@@ -68,12 +68,19 @@ class BleProvider with ChangeNotifier {
         }, onOperationStatus: (cmd, status) {
           print('cmd: ${cmd.toRadixString(16)}, status: $status');
         }, onBatteryChangedV2: (batt) {
-          info.batt = batt;
+          info?.batt = batt; // batt will come before info inite.
           notifyListeners();
         }, onDeviceInfoReceived: (_info) {
           this.info = _info;
           this.info.name = _device.name;
           this.info.mac = _device.id.toString();
+        }, onSyncingDataProgress: (progress) {
+          print('progress: $progress');
+        }, onSyncMonitorDataComplete: ( List<int> bytes, int dataStopType, int dataType, String uid) {
+          print('synced ok. bytes len: ${bytes.length}; ${bytes.sublist(0, 40)}...');
+          print('dataStopType:$dataStopType, dataType:$dataType, uid:$uid');
+        }, onSyncNoDataOfMonitor: () {
+          print('onSyncNoDataOfMonitor');
         }));
 
     client.enableDebug(true);
