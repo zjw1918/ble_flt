@@ -154,7 +154,7 @@ class MegaBleResponseManager {
   }
 
   void handleNotifyResponse(List<int> a) {
-    // print('handleNotifyResponse: ${hex.encode(a)}');
+    print('handleNotifyResponse: ${hex.encode(a)}');
     if (a.isEmpty) return;
     int cmd = a[0];
 

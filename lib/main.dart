@@ -1,4 +1,5 @@
 import 'package:ble_flt/pages/main_ble.dart';
+import 'package:ble_flt/pages/send_check.dart';
 import 'package:ble_flt/permissions/util_permission.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,13 +30,23 @@ class MyApp extends StatelessWidget {
       print('permission ok.');
     });
     
-    return MaterialApp(
-      title: 'Flutter Demo',
+    // send check, 送检app
+   return MaterialApp(
+      title: 'Mega Ble',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
       ),
-      home: BleMainPage(),
+      home: SendCheckPage(),
     );
+
+    // return MaterialApp(
+    //   title: 'Mega Ble',
+    //   theme: ThemeData(
+    //     primarySwatch: Colors.blue,
+    //   ),
+    //   home: SendCheckPage(),
+    //   // home: BleMainPage(),
+    // );
   }
 }
 

@@ -71,7 +71,7 @@ class _BleMainPageState extends State<BleMainPage> {
         RaisedButton(
           child: Text('断开'),
           onPressed: () {
-            bleProvider.client.disconnect();
+            bleProvider.disconnect();
           },
         ),
         RaisedButton(
