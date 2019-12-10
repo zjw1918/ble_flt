@@ -1,9 +1,10 @@
 import 'package:ble_flt/pages/main_ble.dart';
-import 'package:ble_flt/pages/send_check.dart';
+import 'package:ble_flt/pages/send_check/about.dart';
 import 'package:ble_flt/permissions/util_permission.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'pages/send_check/send_check.dart';
 import 'pvd.dart';
 
 // void main() => runApp(ChangeNotifierProvider(
@@ -37,6 +38,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
       ),
       home: SendCheckPage(),
+      routes: {
+        // '/': (_) => SendCheckPage(),
+        '/about': (_) => AboutPage(),
+      },
     );
 
     // return MaterialApp(
