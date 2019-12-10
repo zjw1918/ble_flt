@@ -41,21 +41,31 @@ class _AboutPageState extends State<AboutPage> {
     var blePvd = Provider.of<BleProvider>(context);
     print(blePvd);
 
-    return ListView(
-      children: <Widget>[
-        ListTile(
-          title: Text('hahaha'),
-          onTap: () {},
-        ),
-        ListTile(
-          title: Text('hahaha'),
-          onTap: () {},
-        ),
-        ListTile(
-          title: Text('版本: $_version'),
-          onTap: () {},
-        ),
-      ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('关于'),
+      ),
+      body: ListView(
+        physics: const NeverScrollableScrollPhysics(),
+        children: <Widget>[
+          Card(
+            child: Column(
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(Icons.bluetooth, size: 50),
+                  title: Text('Name: ${blePvd.info?.name ?? '-'} Mac: ${blePvd.info?.mac ?? '-'}'),
+                  subtitle: Text('SN: ${blePvd.info?.sn ?? '-'} FW: ${blePvd.info?.fwVer ?? '-'}'),
+                  
+                ),
+              ],
+            ),
+          ),
+          ListTile(
+            title: Text('版本: $_version'),
+            onTap: () {},
+          ),
+        ],
+      ),
     );
   }
 }

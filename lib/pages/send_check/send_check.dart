@@ -1,4 +1,3 @@
-import 'package:ble_flt/pages/send_check/about.dart';
 import 'package:ble_flt/providers_send_check/ble_pvd.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -8,17 +7,7 @@ import 'ble_live_line_chart.dart';
 
 class SendCheckPage extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    // var blePvd = Provider.of<BleProvider>(context);
-    // blePvd.withContext(context);
-
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => BleProvider()),
-      ],
-      child: Pannel(),
-    );
-  }
+  Widget build(BuildContext context) => Pannel();
 }
 
 class Pannel extends StatelessWidget {
