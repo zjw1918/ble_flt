@@ -73,7 +73,8 @@ class BleProvider with ChangeNotifier {
           notifyListeners();
 
           client.toggleLive(true);
-          client.enableV2ModeSpo();
+          client.enableV2ModeLive();
+          // client.enableV2ModeSpo();
         }, onHeartBeatReceived: (heartBeat) {
           print('onHeartBeatReceived: $heartBeat');
         }, onV2Live: (MegaV2Live lv) {
@@ -92,7 +93,7 @@ class BleProvider with ChangeNotifier {
             this.dataPr.add(LivePoint(_cnt, live.pr));
             _cnt++;
           }
-          print('len: ${this.dataSpo.length}; ${this.dataSpo.sublist(80)}!!');
+          // print('len: ${this.dataSpo.length}; ${this.dataSpo.sublist(80)}!!');
           notifyListeners();
         }, onKnockDevice: () {
           print('onKnockDevice');

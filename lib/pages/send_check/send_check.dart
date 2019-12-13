@@ -91,7 +91,6 @@ class _BleContentState extends State<BleContent>
 
   @override
   Widget build(BuildContext context) {
-    print('_BleContentState built');
     var blePvd = Provider.of<BleProvider>(context);
     blePvd.controller = controller;
 

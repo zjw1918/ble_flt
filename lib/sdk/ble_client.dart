@@ -83,6 +83,10 @@ class MegaBleClient {
     _apiManager.enableV2ModeDaily(true, 0);
   }
 
+  void enableV2ModeLive() {
+    _apiManager.enableV2ModeLiveSpo(true, 0);
+  }
+
   void syncData() => _apiManager.syncMonitorData();
   void syncDailyData() => _apiManager.syncDailyData();
   void reset() => _apiManager.reset();

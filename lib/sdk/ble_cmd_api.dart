@@ -88,6 +88,14 @@ class MegaCmdApiManager {
     _addQueue(a);
   }
 
+  void enableV2ModeLiveSpo(bool ensure, int seconds) {
+    var a = CmdMaker.makeV2EnableModeLiveSpo(ensure, seconds);
+    if (BleConfig.debuggable)
+      print('[cmd->] enableV2ModeLiveSpo: ' + hex.encode(a));
+    // this.service.chWrite.write(a);
+    _addQueue(a);
+  }
+
   void reset() {
     var a = CmdMaker.makeResetCmd();
     if (BleConfig.debuggable)

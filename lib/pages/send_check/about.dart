@@ -25,12 +25,12 @@ class _AboutPageState extends State<AboutPage> {
     String version = packageInfo.version;
     String buildNumber = packageInfo.buildNumber;
 
-    print([
-      appName,
-      packageName,
-      version,
-      buildNumber,
-    ]);
+    // print([
+    //   appName,
+    //   packageName,
+    //   version,
+    //   buildNumber,
+    // ]);
     setState(() {
       _version = '$version-build.$buildNumber';
     });
@@ -39,7 +39,6 @@ class _AboutPageState extends State<AboutPage> {
   @override
   Widget build(BuildContext context) {
     var blePvd = Provider.of<BleProvider>(context);
-    print(blePvd);
 
     return Scaffold(
       appBar: AppBar(
@@ -51,11 +50,12 @@ class _AboutPageState extends State<AboutPage> {
           Card(
             child: Column(
               children: <Widget>[
-                ListTile(
+                blePvd.info == null 
+                ? ListTile(leading: Icon(Icons.bluetooth, size: 50), title: Text('未连接'),)
+                : ListTile(
                   leading: Icon(Icons.bluetooth, size: 50),
                   title: Text('Name: ${blePvd.info?.name ?? '-'} Mac: ${blePvd.info?.mac ?? '-'}'),
                   subtitle: Text('SN: ${blePvd.info?.sn ?? '-'} FW: ${blePvd.info?.fwVer ?? '-'}'),
-                  
                 ),
               ],
             ),
